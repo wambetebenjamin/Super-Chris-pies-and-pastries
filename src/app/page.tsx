@@ -239,7 +239,7 @@ export default function HomePage() {
             <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <div className="wow fadeIn" data-wow-duration="1s" data-wow-delay="0.1s">
                 <h2 className="block-title text-center">{t("home.galleryTitle")}</h2>
-                <p className="title-caption text-center">{t("home.galleryCaption")}</p>
+                <p className="title-caption text-center" style={{ color: "#666" }}>{t("home.galleryCaption")}</p>
               </div>
               <div className="gallery-grid" style={{ marginTop: 24 }}>
                 {galleryPreview.map((src, i) => (
