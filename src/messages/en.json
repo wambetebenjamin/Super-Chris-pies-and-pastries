@@ -1,0 +1,72 @@
+{
+  "nav": {
+    "home": "Home",
+    "menu": "Menu",
+    "custom": "Custom Orders",
+    "classes": "Classes",
+    "about": "About",
+    "gallery": "Gallery",
+    "order": "Order",
+    "contact": "Contact",
+    "signIn": "Sign in"
+  },
+  "common": {
+    "orderNow": "Order now",
+    "bookClass": "Book a class",
+    "orderOnWhatsApp": "Order on WhatsApp",
+    "reserveOnWhatsApp": "Reserve on WhatsApp",
+    "viewMenu": "View menu",
+    "viewClasses": "View classes",
+    "contactUs": "Contact us",
+    "emailUs": "Email us",
+    "whatsappUs": "WhatsApp us",
+    "learnMore": "Learn more",
+    "driveMenu": "View full menu on Google Drive",
+    "driveClasses": "View class schedule on Google Drive",
+    "driveGallery": "View photo gallery on Google Drive",
+    "allergenNote": "Allergen notes available on request.",
+    "artisanNote": "Artisan bakery. All orders confirmed on WhatsApp.",
+    "classesNote": "Classes subject to availability."
+  },
+  "home": {
+    "heroTitle": "SUPER fresh pies, pastries made with love",
+    "heroSubtitle": "Kenyan baking with heart",
+    "heroBody": "From golden pies to custom cakes and hands-on baking classes, SUPER Chris Pies and Pastries brings warm, homemade flavour to every order.",
+    "storyTitle": "Our Story",
+    "storyHeading": "IT STARTED WITH A LOVE FOR BAKING",
+    "storyP1": "SUPER Chris Pies and Pastries is a Kenyan bakery built on simple joy: fresh ingredients, careful hands, and recipes that make people feel at home.",
+    "storyP2": "We specialise in pies, pastries, custom cakes, and practical baking classes for anyone who wants to learn the craft. Every order is prepared with care and confirmed personally on WhatsApp.",
+    "storyP3": "Whether you need a quick treat with chai, a custom cake for a celebration, or a class to sharpen your baking skills, we are here to make it warm, tasty, and memorable.",
+    "specialTitle": "Signature Favourites",
+    "specialCaption": "A taste of what we bake with love. Fresh pies, flaky pastries, and custom treats made for everyday moments and special celebrations.",
+    "howToOrderTitle": "How to Order",
+    "howToOrderCaption": "Ordering is simple and personal. We confirm every detail on WhatsApp so your order comes out just right.",
+    "step1Title": "Choose your treat",
+    "step1Body": "Browse our menu, gallery, or tell us what you have in mind for a custom order.",
+    "step2Title": "Message us on WhatsApp",
+    "step2Body": "Tap any order button and send your details. We will confirm availability, price, and timing.",
+    "step3Title": "Enjoy fresh baking",
+    "step3Body": "Pick up or arrange delivery where available. Every order is prepared fresh with care.",
+    "classesTeaserTitle": "Learn the Craft",
+    "classesTeaserBody": "Join a hands-on baking class and learn how to make pies, pastries, and beautiful cake finishes from scratch. Beginner friendly, practical, and fun.",
+    "galleryTitle": "Fresh from the Kitchen",
+    "galleryCaption": "Real bakes, real moments, and real class experiences from SUPER Chris Pies and Pastries."
+  },
+  "footer": {
+    "about": "Kenyan bakery specialising in pies, pastries, custom cakes and hands-on baking classes. Freshly made with love.",
+    "quickLinks": "Quick Links",
+    "contact": "Contact",
+    "hours": "Ordering Hours",
+    "hoursWeek": "Monday to Saturday",
+    "hoursWeekTime": "8:00 AM - 7:00 PM",
+    "hoursSun": "Sunday",
+    "hoursSunTime": "By order / class schedule",
+    "copyright": "SUPER Chris Pies and Pastries. All rights reserved.",
+    "warmLine": "Baked with love, shared with joy."
+  },
+  "voice": {
+    "start": "Start voice tour",
+    "stop": "Stop voice tour",
+    "text": "Welcome to SUPER Chris Pies and Pastries. We are a Kenyan bakery specialising in fresh pies, pastries, custom cakes, and hands-on baking classes. Browse our menu to order your favourites on WhatsApp, explore custom orders for celebrations, or book a baking class to learn the craft. You can also reach us by email at superchrispiesandpastries at gmail dot com. We look forward to baking something special for you."
+  }
+}

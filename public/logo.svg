@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="SUPER Chris Pies and Pastries logo">
+  <defs>
+    <style>
+      .bg { fill: #fff7f2; }
+      .ring { fill: none; stroke: #e75b1e; stroke-width: 18; }
+      .crust { fill: #e75b1e; }
+      .crust-dark { fill: #c94b15; }
+      .filling { fill: #f6c28b; }
+      .steam { fill: none; stroke: #e75b1e; stroke-width: 10; stroke-linecap: round; }
+      .super { font: 700 54px Georgia, 'Times New Roman', serif; fill: #e75b1e; letter-spacing: 2px; }
+      .chris { font: 700 64px Georgia, 'Times New Roman', serif; fill: #202020; }
+      .sub { font: 700 28px Arial, Helvetica, sans-serif; fill: #686868; letter-spacing: 3px; }
+    </style>
+  </defs>
+  <circle cx="256" cy="256" r="246" class="bg"/>
+  <circle cx="256" cy="256" r="236" class="ring"/>
+  <g transform="translate(0,-18)">
+    <path d="M138 238 C138 238 160 196 256 196 C352 196 374 238 374 238 L360 312 C356 332 340 344 320 344 L192 344 C172 344 156 332 152 312 Z" class="crust"/>
+    <path d="M156 250 C176 228 210 216 256 216 C302 216 336 228 356 250 L346 304 C343 318 332 326 318 326 L194 326 C180 326 169 318 166 304 Z" class="filling"/>
+    <path d="M168 252 L344 252 L336 272 L176 272 Z" class="crust-dark" opacity="0.18"/>
+    <path d="M210 270 L302 270" stroke="#c94b15" stroke-width="8" stroke-linecap="round" opacity="0.35"/>
+    <path d="M226 286 L286 286" stroke="#c94b15" stroke-width="8" stroke-linecap="round" opacity="0.25"/>
+    <path d="M224 170 C214 156 214 144 224 132" class="steam"/>
+    <path d="M256 162 C246 148 246 136 256 124" class="steam"/>
+    <path d="M288 170 C278 156 278 144 288 132" class="steam"/>
+  </g>
+  <text x="256" y="392" text-anchor="middle" class="super">SUPER</text>
+  <text x="256" y="442" text-anchor="middle" class="chris">Chris</text>
+  <text x="256" y="472" text-anchor="middle" class="sub">PIES &amp; PASTRIES</text>
+</svg>
