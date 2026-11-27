@@ -6,41 +6,75 @@ import { siteConfig, whatsappUrl } from "@/lib/site";
 
 type MenuItem = {
   name: string;
-  nameSw: string;
-  desc: string;
-  descSw: string;
-  price: string;
-  image: string;
   category: string;
+  image: string;
 };
 
 const categories = [
   { id: "pies", en: "Pies", sw: "Pai" },
-  { id: "pastries", en: "Pastries", sw: "Vitafunwa" },
-  { id: "cakes", en: "Cakes", sw: "Keki" },
   { id: "savoury", en: "Savoury", sw: "Vya Chumvi" },
-  { id: "sweet", en: "Sweet", sw: "Vitamu" },
-  { id: "seasonal", en: "Seasonal", sw: "Msimu" },
-  { id: "custom", en: "Custom", sw: "Maalum" },
+  { id: "croissants-danish", en: "Croissants & Danish", sw: "Croissant na Danish" },
+  { id: "rolls", en: "Cinnamon Rolls", sw: "Roli za Mdalasini" },
+  { id: "cookies-treats", en: "Cookies & Treats", sw: "Biskuti na Vitamu" },
 ];
 
-const items: MenuItem[] = [
-  { category: "pies", name: "Classic Meat Pie", nameSw: "Pai ya Nyama ya Kawaida", desc: "Golden, flaky crust filled with well-seasoned minced meat. A perfect pair with Kenyan chai.", descSw: "Ukoko wa dhahabu uliojazwa nyama iliyokolezwa vizuri. Inafaa sana na chai ya Kenya.", price: "From KES 150", image: "/images/repo/repo-05.jpg" },
-  { category: "pies", name: "Chicken Pie", nameSw: "Pai ya Kuku", desc: "Tender chicken in a creamy, savoury filling wrapped in a crisp pastry shell.", descSw: "Kuku laini katika kujazwa kitamu ndani ya ukoko mkali.", price: "From KES 180", image: "/images/repo/repo-07.jpg" },
-  { category: "pies", name: "Vegetable Pie", nameSw: "Pai ya Mboga", desc: "A hearty mix of fresh vegetables and spices in our signature golden crust.", descSw: "Mchanganyiko wa mboga safi na viungo katika ukoko wetu wa dhahabu.", price: "From KES 140", image: "/images/repo/repo-09.jpg" },
-  { category: "pastries", name: "Butter Pastry", nameSw: "Kifungua Kinywa cha Siagi", desc: "Light, layered, and buttery. Freshly baked for breakfast or tea time.", descSw: "Nyepesi, tabaka, na siagi. Imeokwa fresh kwa kifungua kinywa au chai.", price: "From KES 120", image: "/images/repo/repo-11.jpg" },
-  { category: "pastries", name: "Sausage Roll", nameSw: "Roli ya Soseji", desc: "Seasoned sausage wrapped in flaky pastry, baked until golden and crisp.", descSw: "Soseji iliyokolezwa imefungwa kwenye vitafunwa na kuokwa hadi dhahabu.", price: "From KES 130", image: "/images/repo/repo-13.jpg" },
-  { category: "pastries", name: "Danish Pastry", nameSw: "Vitafunwa vya Danish", desc: "Soft, sweet pastry with a delicate finish. Great for gifting or a personal treat.", descSw: "Vitafunwa laini na vitamu. Vizuri kwa zawadi au kujifurahisha.", price: "From KES 160", image: "/images/repo/repo-14.jpg" },
-  { category: "cakes", name: "Celebration Cake", nameSw: "Keki ya Sherehe", desc: "Custom decorated cake for birthdays, anniversaries, and special moments.", descSw: "Keki iliyopambwa maalum kwa siku za kuzaliwa na sherehe.", price: "From KES 2,500", image: "/images/repo/repo-20.jpg" },
-  { category: "cakes", name: "Cupcake Box", nameSw: "Sanduku la Cupcakes", desc: "A box of freshly baked cupcakes with your choice of flavour and simple decoration.", descSw: "Sanduku la cupcakes fresh na ladha unayopenda.", price: "From KES 1,200 / box", image: "/images/repo/repo-21.jpg" },
-  { category: "cakes", name: "Custom Event Cake", nameSw: "Keki ya Tukio Maalum", desc: "Made to your design, flavour, and size. We confirm every detail on WhatsApp.", descSw: "Imetengenezwa kwa muundo, ladha, na ukubwa wako. Tunathibitisha kupitia WhatsApp.", price: "Quote on request", image: "/images/repo/repo-23.jpg" },
-  { category: "savoury", name: "Mini Savoury Platter", nameSw: "Sahani Ndogo ya Vitafunwa", desc: "A mix of bite-sized savoury pastries for meetings, parties, and family gatherings.", descSw: "Mchanganyiko wa vitafunwa vya chumvi kwa mikutano na sherehe.", price: "From KES 1,500", image: "/images/repo/repo-24.jpg" },
-  { category: "savoury", name: "Spiced Beef Bake", nameSw: "Kitafunwa cha Nyama", desc: "Crisp outside, flavourful spiced filling inside. A crowd favourite.", descSw: "Nje mkali, ndani kujazwa kwa viungo. Kipendwa na wengi.", price: "From KES 100", image: "/images/repo/repo-26.jpg" },
-  { category: "sweet", name: "Sweet Treat Box", nameSw: "Sanduku la Vitamu", desc: "An assortment of sweet pastries and bites, perfect for sharing over chai.", descSw: "Mchanganyiko wa vitafunwa vitamu, vizuri kushiriki na chai.", price: "From KES 1,000", image: "/images/repo/repo-28.jpg" },
-  { category: "sweet", name: "Fruit Pastry", nameSw: "Kifungua Kinywa cha Matunda", desc: "Fresh pastry topped with sweet fruit notes for a light, satisfying treat.", descSw: "Kitafunwa fresh chenye ladha ya matunda.", price: "From KES 160", image: "/images/repo/repo-29.jpg" },
-  { category: "seasonal", name: "Seasonal Special", nameSw: "Maalum ya Msimu", desc: "Ask us what is fresh this season. We love creating limited bakes with local flavour.", descSw: "Tuulize ni nini kipya msimu huu. Tunapenda kuunda vitafunwa vya msimu.", price: "Price varies", image: "/images/repo/repo-31.jpg" },
-  { category: "custom", name: "Custom Order", nameSw: "Oda Maalum", desc: "Have something special in mind? Tell us your flavour, size, and occasion on WhatsApp.", descSw: "Una wazo maalum? Tuambie ladha, ukubwa, na tukio lako kupitia WhatsApp.", price: "Quote on request", image: "/images/repo/repo-33.jpg" },
+const productNames: { name: string; category: string }[] = [
+  { name: "Minced Beef Pie", category: "pies" },
+  { name: "Chicken Pie", category: "pies" },
+  { name: "Classic Butter Croissant", category: "croissants-danish" },
+  { name: "Classic Cinnamon Roll", category: "rolls" },
+  { name: "Blueberry Danish", category: "croissants-danish" },
+  { name: "Sausage Roll", category: "savoury" },
+  { name: "Samosa", category: "savoury" },
+  { name: "Vegetable Pie", category: "pies" },
+  { name: "Apple Pie", category: "pies" },
+  { name: "Cherry Pie", category: "pies" },
+  { name: "Chocolate Pie", category: "pies" },
+  { name: "Lemon Meringue", category: "pies" },
+  { name: "Chocolate Croissant", category: "croissants-danish" },
+  { name: "Almond Croissant", category: "croissants-danish" },
+  { name: "Pecan Cinnamon Roll", category: "rolls" },
+  { name: "Blueberry Pie", category: "pies" },
+  { name: "Pumpkin Pie", category: "pies" },
+  { name: "Pecan Pie", category: "pies" },
+  { name: "Key Lime Pie", category: "pies" },
+  { name: "Peach Pie", category: "pies" },
+  { name: "Banana Cream", category: "pies" },
+  { name: "Coconut Cream", category: "pies" },
+  { name: "Sweet Potato Pie", category: "pies" },
+  { name: "Blackberry Pie", category: "pies" },
+  { name: "Cheese Croissant", category: "croissants-danish" },
+  { name: "Raspberry Danish", category: "croissants-danish" },
+  { name: "Apple Danish", category: "croissants-danish" },
+  { name: "Almond Danish", category: "croissants-danish" },
+  { name: "Peach Danish", category: "croissants-danish" },
+  { name: "Cherry Danish", category: "croissants-danish" },
+  { name: "Cheese Danish", category: "croissants-danish" },
+  { name: "Chocolate Danish", category: "croissants-danish" },
+  { name: "Blueberry Cinnamon Roll", category: "rolls" },
+  { name: "Apple Cinnamon Roll", category: "rolls" },
+  { name: "Chocolate Cinnamon Roll", category: "rolls" },
+  { name: "Lemon Cinnamon Roll", category: "rolls" },
+  { name: "Strawberry Cinnamon Roll", category: "rolls" },
+  { name: "Pumpkin Cinnamon Roll", category: "rolls" },
+  { name: "Salted Caramel Roll", category: "rolls" },
+  { name: "Ginger Cookie", category: "cookies-treats" },
+  { name: "Rich Chocolate Cookie", category: "cookies-treats" },
+  { name: "Danish Cookie", category: "cookies-treats" },
+  { name: "Double Chocolate Cookie", category: "cookies-treats" },
+  { name: "Chocolate Fingers - NEW", category: "cookies-treats" },
+  { name: "Coconut Oat Cookies - NEW", category: "cookies-treats" },
+  { name: "Coffee Kisses", category: "cookies-treats" },
+  { name: "Melting Moments", category: "cookies-treats" },
+  { name: "Strawberry Stars", category: "cookies-treats" },
+  { name: "Tart Shells - 6pcs", category: "cookies-treats" },
+  { name: "Strawberry Rhubarb Pie", category: "pies" },
 ];
+
+const items: MenuItem[] = productNames.map((product, index) => ({
+  ...product,
+  image: `/images/repo/repo-${String((index % 52) + 1).padStart(2, "0")}.jpg`,
+}));
 
 export default function MenuPage() {
   const { locale } = useLocale();
@@ -66,8 +100,8 @@ export default function MenuPage() {
               <h2 className="block-title text-center">{isSw ? "Kila Kitu Kimeokwa kwa Upendo" : "Baked with Love"}</h2>
               <p className="section-lead">
                 {isSw
-                  ? "Bei ni makadirio na zinaweza kutofautiana kulingana na ukubwa na maelezo. Tunathibitisha kila oda kupitia WhatsApp."
-                  : "Prices are a guide and may vary based on size and details. We confirm every order on WhatsApp."}
+                  ? "Bidhaa zote 50 zimeorodheshwa moja moja. Tunathibitisha upatikanaji na bei kupitia WhatsApp."
+                  : "All 50 items are listed individually. We confirm availability and pricing on WhatsApp."}
               </p>
               <div style={{ textAlign: "center", marginBottom: 30 }}>
                 <a href={siteConfig.driveMenuUrl} className="btn-outline-sc" target="_blank" rel="noopener noreferrer">
@@ -88,13 +122,13 @@ export default function MenuPage() {
                   {catItems.map((item) => (
                     <div key={item.name} className="col-lg-4 col-md-6 col-sm-12 col-xs-12" style={{ marginBottom: 24 }}>
                       <div className="sc-card">
-                        <Image src={item.image} alt={isSw ? item.nameSw : item.name} width={800} height={600} style={{ width: "100%", height: 240, objectFit: "cover" }} />
+                        <Image src={item.image} alt={item.name} width={800} height={600} style={{ width: "100%", height: 240, objectFit: "cover" }} />
                         <div className="sc-card-body">
-                          <h3>{isSw ? item.nameSw : item.name}</h3>
-                          <p>{isSw ? item.descSw : item.desc}</p>
-                          <div className="price-band">{item.price}</div>
+                          <h3>{item.name}</h3>
+                          <p>{isSw ? "Tuulize kuhusu upatikanaji na bei." : "Ask us about availability and pricing."}</p>
+                          <div className="price-band">{isSw ? "Uliza bei" : "Ask for price"}</div>
                           <a
-                            href={whatsappUrl(`Hi SUPER Chris Pies and Pastries, I would like to order: ${item.name} (${item.price}). Please confirm availability and details.`)}
+                            href={whatsappUrl(`Hi SUPER Chris Pies and Pastries, I would like to order: ${item.name}. Please confirm availability and price.`)}
                             className="btn-primary-sc"
                             target="_blank"
                             rel="noopener noreferrer"

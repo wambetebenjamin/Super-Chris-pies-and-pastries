@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useLocale } from "@/lib/i18n";
 import { siteConfig, whatsappUrl } from "@/lib/site";
 
@@ -36,6 +37,13 @@ const specials = [
   },
 ];
 
+const heroSlides = [
+  "/images/repo/repo-10.jpg",
+  "/images/repo/repo-15.jpg",
+  "/images/repo/repo-20.jpg",
+  "/images/repo/repo-25.jpg",
+];
+
 const galleryPreview = [
   "/images/repo/repo-05.jpg",
   "/images/repo/repo-08.jpg",
@@ -48,18 +56,35 @@ const galleryPreview = [
 export default function HomePage() {
   const { locale, t } = useLocale();
   const isSw = locale === "sw";
+  const [activeHeroSlide, setActiveHeroSlide] = useState(0);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
+    const timer = window.setInterval(() => {
+      setActiveHeroSlide((current) => (current + 1) % heroSlides.length);
+    }, 6000);
+
+    return () => window.clearInterval(timer);
+  }, []);
 
   return (
     <>
       <div
         id="banner"
         className="banner static-banner full-screen-mode parallax"
-        style={{
-          backgroundImage: "url(/images/repo/repo-10.jpg)",
-          backgroundPosition: "center center",
-          backgroundSize: "cover",
-        }}
+        aria-label={isSw ? "SUPER Chris Bakery" : "SUPER Chris Pies and Pastries"}
       >
+        <div className="home-hero-slides" aria-hidden="true">
+          {heroSlides.map((image, index) => (
+            <div
+              key={image}
+              className={`home-hero-slide${index === activeHeroSlide ? " is-active" : ""}`}
+              style={{ backgroundImage: `url(${image})` }}
+            />
+          ))}
+        </div>
         <div className="container pr">
           <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div className="banner-static">
