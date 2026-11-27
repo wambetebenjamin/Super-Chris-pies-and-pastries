@@ -1,0 +1,72 @@
+{
+  "nav": {
+    "home": "Mwanzo",
+    "menu": "Menyu",
+    "custom": "Oda Maalum",
+    "classes": "Mafunzo",
+    "about": "Kuhusu Sisi",
+    "gallery": "Picha",
+    "order": "Agiza",
+    "contact": "Wasiliana",
+    "signIn": "Ingia"
+  },
+  "common": {
+    "orderNow": "Agiza sasa",
+    "bookClass": "Jiandikishe kwa darasa",
+    "orderOnWhatsApp": "Agiza kupitia WhatsApp",
+    "reserveOnWhatsApp": "Hifadhi kupitia WhatsApp",
+    "viewMenu": "Tazama menyu",
+    "viewClasses": "Tazama mafunzo",
+    "contactUs": "Wasiliana nasi",
+    "emailUs": "Tutumie barua pepe",
+    "whatsappUs": "Tutumie WhatsApp",
+    "learnMore": "Jifunze zaidi",
+    "driveMenu": "Tazama menyu kamili kwenye Google Drive",
+    "driveClasses": "Tazama ratiba ya mafunzo kwenye Google Drive",
+    "driveGallery": "Tazama picha zaidi kwenye Google Drive",
+    "allergenNote": "Maelezo ya mzio yanapatikana ukiomba.",
+    "artisanNote": "Bakery ya ufundi. Oda zote huthibitishwa kupitia WhatsApp.",
+    "classesNote": "Mafunzo yanategemea upatikanaji."
+  },
+  "home": {
+    "heroTitle": "Pai safi za SUPER, vitafunwa vilivyotengenezwa kwa upendo",
+    "heroSubtitle": "Uokaji wa Kenya kwa moyo",
+    "heroBody": "Kutoka pai za dhahabu hadi keki maalum na mafunzo ya uokaji, SUPER Chris Pies and Pastries huleta ladha ya nyumbani kwa kila oda.",
+    "storyTitle": "Hadithi Yetu",
+    "storyHeading": "ILIANZA NA UPENDO WA KUOKA",
+    "storyP1": "SUPER Chris Pies and Pastries ni bakery ya Kenya iliyojengwa kwa furaha rahisi: viungo safi, mikono makini, na mapishi yanayowafanya watu wajisikie nyumbani.",
+    "storyP2": "Tunabobea katika pai, vitafunwa, keki maalum, na mafunzo ya vitendo kwa yeyote anayetaka kujifunza ufundi. Kila oda huandaliwa kwa uangalifu na kuthibitishwa kupitia WhatsApp.",
+    "storyP3": "Iwe unahitaji kitafunwa cha haraka pamoja na chai, keki maalum kwa sherehe, au darasa la kuboresha ujuzi wako wa kuoka, tuko hapa kukufanyia kitu kitamu na cha kukumbukwa.",
+    "specialTitle": "Vipendwa Vyetu",
+    "specialCaption": " ladha ya kile tunachooka kwa upendo. Pai safi, vitafunwa vitamu, na keki maalum kwa kila wakati.",
+    "howToOrderTitle": "Jinsi ya Kuagiza",
+    "howToOrderCaption": "Kuagiza ni rahisi na kwa ukaribu. Tunathibitisha kila kitu kupitia WhatsApp ili oda yako itoke sawa.",
+    "step1Title": "Chagua unachotaka",
+    "step1Body": "Angalia menyu yetu, picha, au tuambie unachofikiria kwa oda maalum.",
+    "step2Title": "Tutumie WhatsApp",
+    "step2Body": "Gusa kitufe chochote cha kuagiza na utume maelezo yako. Tutathibitisha upatikanaji, bei, na muda.",
+    "step3Title": "Furahia uokaji safi",
+    "step3Body": "Chukua oda yako au panga usafirishaji inapowezekana. Kila oda huandaliwa ikiwa fresh kwa uangalifu.",
+    "classesTeaserTitle": "Jifunze Ufundi",
+    "classesTeaserBody": "Jiunge na darasa la vitendo na ujifunze kutengeneza pai, vitafunwa, na mapambo mazuri ya keki kuanzia mwanzo. Rafiki kwa wanaoanza, yenye vitendo, na ya kufurahisha.",
+    "galleryTitle": "Safi Kutoka Jikoni",
+    "galleryCaption": "Picha halisi za bidhaa zetu, matukio, na mafunzo kutoka SUPER Chris Pies and Pastries."
+  },
+  "footer": {
+    "about": "Bakery ya Kenya inayobobea katika pai, vitafunwa, keki maalum na mafunzo ya uokaji. Imetengenezwa kwa upendo.",
+    "quickLinks": "Viungo vya Haraka",
+    "contact": "Mawasiliano",
+    "hours": "Saa za Kuagiza",
+    "hoursWeek": "Jumatatu hadi Jumamosi",
+    "hoursWeekTime": "8:00 Asubuhi - 7:00 Jioni",
+    "hoursSun": "Jumapili",
+    "hoursSunTime": "Kwa oda au ratiba ya darasa",
+    "copyright": "SUPER Chris Pies and Pastries. Haki zote zimehifadhiwa.",
+    "warmLine": "Imeokwa kwa upendo, kushirikiwa kwa furaha."
+  },
+  "voice": {
+    "start": "Anza ziara ya sauti",
+    "stop": "Simamisha ziara ya sauti",
+    "text": "Karibu SUPER Chris Pies and Pastries. Sisi ni bakery ya Kenya inayobobea katika pai safi, vitafunwa, keki maalum, na mafunzo ya uokaji. Angalia menyu yetu kuagiza kupitia WhatsApp, chunguza oda maalum kwa sherehe, au jiandikishe kwa darasa la uokaji. Unaweza pia kututumia barua pepe kwa superchrispiesandpastries at gmail dot com. Tunatarajia kukuokea kitu maalum."
+  }
+}
