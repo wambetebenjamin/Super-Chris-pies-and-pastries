@@ -12,36 +12,36 @@ const specials = [
     titleSw: "Minced Beef Pie",
     desc: "See this item in our menu and message us to check availability and pricing.",
     descSw: "Tazama bidhaa hii kwenye menyu na ututumie ujumbe kuuliza upatikanaji na bei.",
-    image: "/images/repo/repo-10.jpg",
+    image: "/images/repo/repo-08.jpg",
   },
   {
     title: "Classic Butter Croissant",
     titleSw: "Classic Butter Croissant",
     desc: "See this item in our menu and message us to check availability and pricing.",
     descSw: "Tazama bidhaa hii kwenye menyu na ututumie ujumbe kuuliza upatikanaji na bei.",
-    image: "/images/repo/repo-15.jpg",
+    image: "/images/repo/repo-26.jpg",
   },
   {
     title: "Blueberry Danish",
     titleSw: "Blueberry Danish",
     desc: "See this item in our menu and message us to check availability and pricing.",
     descSw: "Tazama bidhaa hii kwenye menyu na ututumie ujumbe kuuliza upatikanaji na bei.",
-    image: "/images/repo/repo-20.jpg",
+    image: "/images/repo/repo-34.jpg",
   },
   {
     title: "Classic Cinnamon Roll",
     titleSw: "Classic Cinnamon Roll",
     desc: "See this item in our menu and message us to check availability and pricing.",
     descSw: "Tazama bidhaa hii kwenye menyu na ututumie ujumbe kuuliza upatikanaji na bei.",
-    image: "/images/repo/repo-25.jpg",
+    image: "/images/repo/repo-45.jpg",
   },
 ];
 
 const heroSlides = [
-  "/images/repo/repo-10.jpg",
-  "/images/repo/repo-15.jpg",
-  "/images/repo/repo-20.jpg",
-  "/images/repo/repo-25.jpg",
+  "/images/repo/repo-08.jpg",
+  "/images/repo/repo-26.jpg",
+  "/images/repo/repo-34.jpg",
+  "/images/repo/repo-45.jpg",
 ];
 
 const galleryPreview = [

@@ -7,7 +7,7 @@ import { siteConfig, whatsappUrl } from "@/lib/site";
 type MenuItem = {
   name: string;
   category: string;
-  image: string;
+  image?: string;
 };
 
 const categories = [
@@ -71,9 +71,51 @@ const productNames: { name: string; category: string }[] = [
   { name: "Strawberry Rhubarb Pie", category: "pies" },
 ];
 
-const items: MenuItem[] = productNames.map((product, index) => ({
+const productImages: Partial<Record<string, string>> = {
+  "Minced Beef Pie": "/images/repo/repo-08.jpg",
+  "Chicken Pie": "/images/repo/repo-47.jpg",
+  "Classic Butter Croissant": "/images/repo/repo-26.jpg",
+  "Classic Cinnamon Roll": "/images/repo/repo-45.jpg",
+  "Blueberry Danish": "/images/repo/repo-34.jpg",
+  "Sausage Roll": "/images/repo/repo-15.jpg",
+  Samosa: "/images/repo/repo-07.jpg",
+  "Vegetable Pie": "/images/repo/repo-32.jpg",
+  "Lemon Meringue": "/images/repo/repo-42.jpg",
+  "Chocolate Croissant": "/images/repo/repo-23.jpg",
+  "Almond Croissant": "/images/repo/repo-44.jpg",
+  "Pecan Cinnamon Roll": "/images/repo/repo-17.jpg",
+  "Blueberry Pie": "/images/repo/repo-36.jpg",
+  "Pumpkin Pie": "/images/repo/repo-27.jpg",
+  "Pecan Pie": "/images/repo/repo-24.jpg",
+  "Key Lime Pie": "/images/repo/repo-43.jpg",
+  "Peach Pie": "/images/repo/repo-51.jpg",
+  "Banana Cream": "/images/repo/repo-21.jpg",
+  "Coconut Cream": "/images/repo/repo-38.jpg",
+  "Sweet Potato Pie": "/images/repo/repo-05.jpg",
+  "Blackberry Pie": "/images/repo/repo-41.jpg",
+  "Raspberry Danish": "/images/repo/repo-35.jpg",
+  "Apple Danish": "/images/repo/repo-06.jpg",
+  "Peach Danish": "/images/repo/repo-12.jpg",
+  "Cherry Danish": "/images/repo/repo-33.jpg",
+  "Cheese Danish": "/images/repo/repo-11.jpg",
+  "Chocolate Danish": "/images/repo/repo-29.jpg",
+  "Blueberry Cinnamon Roll": "/images/repo/repo-48.jpg",
+  "Apple Cinnamon Roll": "/images/repo/repo-40.jpg",
+  "Chocolate Cinnamon Roll": "/images/repo/repo-16.jpg",
+  "Strawberry Cinnamon Roll": "/images/repo/repo-28.jpg",
+  "Ginger Cookie": "/images/repo/repo-49.jpg",
+  "Rich Chocolate Cookie": "/images/repo/repo-20.jpg",
+  "Double Chocolate Cookie": "/images/repo/repo-19.jpg",
+  "Chocolate Fingers - NEW": "/images/repo/repo-18.jpg",
+  "Coconut Oat Cookies - NEW": "/images/repo/repo-10.jpg",
+  "Melting Moments": "/images/repo/repo-37.jpg",
+  "Strawberry Stars": "/images/repo/repo-30.jpg",
+  "Tart Shells - 6pcs": "/images/repo/repo-50.jpg",
+};
+
+const items: MenuItem[] = productNames.map((product) => ({
   ...product,
-  image: `/images/repo/repo-${String((index % 52) + 1).padStart(2, "0")}.jpg`,
+  image: productImages[product.name],
 }));
 
 export default function MenuPage() {
@@ -122,7 +164,9 @@ export default function MenuPage() {
                   {catItems.map((item) => (
                     <div key={item.name} className="col-lg-4 col-md-6 col-sm-12 col-xs-12" style={{ marginBottom: 24 }}>
                       <div className="sc-card">
-                        <Image src={item.image} alt={item.name} width={800} height={600} style={{ width: "100%", height: 240, objectFit: "cover" }} />
+                        {item.image ? (
+                          <Image src={item.image} alt={item.name} width={800} height={600} style={{ width: "100%", height: 240, objectFit: "cover" }} />
+                        ) : null}
                         <div className="sc-card-body">
                           <h3>{item.name}</h3>
                           <p>{isSw ? "Tuulize kuhusu upatikanaji na bei." : "Ask us about availability and pricing."}</p>
