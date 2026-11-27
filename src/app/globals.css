@@ -523,3 +523,75 @@ textarea:focus-visible {
   .voice-tour-btn { left: 14px; font-size: 20px; }
   .cookie-banner { left: 10px; right: 10px; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
 }
+
+/* Photo-to-menu labeling workspace */
+.photo-label-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+  margin-bottom: 24px;
+  background: #f5f5f5;
+  border-left: 4px solid #e75b1e;
+}
+.photo-label-toolbar strong { color: #202020; font-size: 18px; }
+.photo-label-toolbar p { color: #555; margin: 4px 0 0; }
+.photo-label-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.photo-label-actions button { min-height: 44px; cursor: pointer; }
+.photo-label-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(180px, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.photo-label-controls label,
+.photo-label-select,
+.photo-label-custom { display: grid; gap: 6px; color: #202020; font-weight: 600; }
+.photo-label-controls input,
+.photo-label-controls select,
+.photo-label-select select,
+.photo-label-custom input {
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  background: #fff;
+  color: #202020;
+  font: inherit;
+}
+.photo-label-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.photo-label-card {
+  min-width: 0;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.photo-label-image {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: #eee;
+}
+.photo-label-image img { object-fit: contain; }
+.photo-label-card-body { display: grid; gap: 12px; padding: 14px; }
+.photo-label-card-body h2 { margin: 0; color: #202020; font: 700 16px/1.3 'Roboto', sans-serif; }
+.photo-label-select span,
+.photo-label-custom span { font-size: 13px; }
+.photo-label-current { margin: 0; color: #555; font-size: 13px; overflow-wrap: anywhere; }
+.photo-label-current strong { color: #202020; }
+@media (max-width: 900px) {
+  .photo-label-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .photo-label-toolbar { align-items: stretch; flex-direction: column; padding: 16px; }
+  .photo-label-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .photo-label-actions button { padding-right: 8px; padding-left: 8px; font-size: 12px; }
+  .photo-label-controls { grid-template-columns: 1fr; }
+  .photo-label-grid { grid-template-columns: 1fr; gap: 16px; }
+}
