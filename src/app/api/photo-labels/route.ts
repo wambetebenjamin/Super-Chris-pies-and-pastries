@@ -34,6 +34,10 @@ function serviceHeaders(key: string, extra: Record<string, string> = {}) {
   };
 }
 
+function editingIsOpen() {
+  return process.env.PHOTO_LABELS_OPEN_FOR_EDIT === "true";
+}
+
 export async function GET() {
   const config = supabaseConfig();
   if (!config) return NextResponse.json({ error: "Photo labels are not configured." }, { status: 503 });
@@ -49,14 +53,17 @@ export async function GET() {
     const labels = Object.fromEntries(
       rows.map((row) => [row.filename, row.skip ? "__skip__" : row.label || ""]),
     );
-    return NextResponse.json({ labels }, { headers: { "Cache-Control": "no-store, max-age=0" } });
+    return NextResponse.json(
+      { labels, editingOpen: editingIsOpen() },
+      { headers: { "Cache-Control": "no-store, max-age=0" } },
+    );
   } catch {
     return NextResponse.json({ error: "Could not load saved photo labels." }, { status: 502 });
   }
 }
 
 export async function POST(request: Request) {
-  if (!adminTokenMatches(request)) {
+  if (!editingIsOpen() && !adminTokenMatches(request)) {
     return NextResponse.json({ error: "Admin access token is incorrect." }, { status: 401 });
   }
 
@@ -67,7 +74,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  if (body.action === "verify") return NextResponse.json({ ok: true });
+  if (body.action === "verify") return NextResponse.json({ ok: true, editingOpen: editingIsOpen() });
 
   const filename = body.filename || "";
   if (!/^repo-(0[1-9]|[1-4][0-9]|5[0-2])\.jpg$/.test(filename)) {

@@ -16,8 +16,8 @@ type Filter = "all" | "unlabeled" | "labeled" | "skip";
 async function fetchSavedLabels() {
   const response = await fetch("/api/photo-labels", { cache: "no-store" });
   if (!response.ok) throw new Error("Could not load shared labels.");
-  const data = (await response.json()) as { labels?: Record<string, string> };
-  return data.labels || {};
+  const data = (await response.json()) as { labels?: Record<string, string>; editingOpen?: boolean };
+  return { labels: data.labels || {}, editingOpen: data.editingOpen === true };
 }
 
 export default function PhotoLabelsPage() {
@@ -25,6 +25,7 @@ export default function PhotoLabelsPage() {
   const [filter, setFilter] = useState<Filter>("all");
   const [search, setSearch] = useState("");
   const [adminToken, setAdminToken] = useState("");
+  const [editingOpen, setEditingOpen] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [saveStatus, setSaveStatus] = useState("Loading saved labels...");
@@ -48,9 +49,14 @@ export default function PhotoLabelsPage() {
     }
     fetchSavedLabels().then((saved) => {
       if (!active) return;
-      setLabels(saved);
+      setLabels(saved.labels);
+      if (saved.editingOpen) {
+        setEditingOpen(true);
+        setIsUnlocked(true);
+        setSaveStatus("Open for labeling. Changes save to the shared menu.");
+      }
       setIsLoaded(true);
-      setSaveStatus("Connected to shared labels");
+      if (!saved.editingOpen) setSaveStatus("Connected to shared labels");
     }).catch(() => {
       if (!active) return;
       setIsLoaded(true);
@@ -150,23 +156,30 @@ export default function PhotoLabelsPage() {
               <strong>{reviewedCount} of {photoFiles.length} photos reviewed</strong>
               <p aria-live="polite">{isLoaded ? saveStatus : "Loading saved labels..."}</p>
             </div>
-            <form className="photo-label-access" onSubmit={unlockEditing}>
-              <label htmlFor="photo-label-token">Owner access token</label>
-              <div>
-                <input
-                  id="photo-label-token"
-                  type="password"
-                  autoComplete="current-password"
-                  value={adminToken}
-                  onChange={(event) => setAdminToken(event.target.value)}
-                  placeholder={isUnlocked ? "Editing unlocked" : "Enter owner token to edit"}
-                  disabled={isUnlocked || !isLoaded}
-                />
-                <button className="btn-primary-sc" type="submit" disabled={isUnlocked || !isLoaded || !adminToken}>
-                  {isUnlocked ? "Unlocked" : "Unlock editing"}
-                </button>
+            {editingOpen ? (
+              <div className="photo-label-access" role="status">
+                <strong>Editing is open</strong>
+                <span>You can label each photo now. Changes save automatically.</span>
               </div>
-            </form>
+            ) : (
+              <form className="photo-label-access" onSubmit={unlockEditing}>
+                <label htmlFor="photo-label-token">Owner access token</label>
+                <div>
+                  <input
+                    id="photo-label-token"
+                    type="password"
+                    autoComplete="current-password"
+                    value={adminToken}
+                    onChange={(event) => setAdminToken(event.target.value)}
+                    placeholder={isUnlocked ? "Editing unlocked" : "Enter owner token to edit"}
+                    disabled={isUnlocked || !isLoaded}
+                  />
+                  <button className="btn-primary-sc" type="submit" disabled={isUnlocked || !isLoaded || !adminToken}>
+                    {isUnlocked ? "Unlocked" : "Unlock editing"}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
 
           <div className="photo-label-controls">
