@@ -595,3 +595,24 @@ textarea:focus-visible {
   .photo-label-controls { grid-template-columns: 1fr; }
   .photo-label-grid { grid-template-columns: 1fr; gap: 16px; }
 }
+
+/* Remove full-section dark veils. Keep text readable with local text shadows only. */
+.banner.static-banner::before,
+.page-hero::before,
+.special-menu::before,
+.team-main::before,
+.cta-band::before {
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+}
+.page-hero h1,
+.page-hero p,
+.special-menu .block-title,
+.special-menu .title-caption,
+.team-main .block-title,
+.team-main .title-caption,
+.cta-band h2,
+.cta-band p {
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.75);
+}
