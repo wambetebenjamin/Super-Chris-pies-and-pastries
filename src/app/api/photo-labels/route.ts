@@ -34,6 +34,16 @@ function serviceHeaders(key: string, extra: Record<string, string> = {}) {
   };
 }
 
+async function failedWriteResponse(response: Response, operation: string) {
+  const body = await response.json().catch(() => ({})) as { code?: string };
+  const detail = `Supabase ${response.status}${body.code ? ` (${body.code})` : ""}`;
+  console.error(`[photo-labels] ${operation} failed: ${detail}`);
+  return NextResponse.json(
+    { error: `Could not ${operation} photo label.`, detail },
+    { status: 502 },
+  );
+}
+
 function editingIsOpen() {
   return process.env.PHOTO_LABELS_OPEN_FOR_EDIT === "true";
 }
@@ -98,7 +108,7 @@ export async function POST(request: Request) {
         headers: serviceHeaders(config.key, { Prefer: "return=minimal" }),
         cache: "no-store",
       });
-      if (!response.ok) return NextResponse.json({ error: "Could not clear this photo label." }, { status: 502 });
+      if (!response.ok) return failedWriteResponse(response, "clear");
       return NextResponse.json({ ok: true });
     }
 
@@ -113,7 +123,7 @@ export async function POST(request: Request) {
       }),
       cache: "no-store",
     });
-    if (!response.ok) return NextResponse.json({ error: "Could not save this photo label." }, { status: 502 });
+    if (!response.ok) return failedWriteResponse(response, "save");
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: "Could not save this photo label." }, { status: 502 });

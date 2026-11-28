@@ -122,10 +122,16 @@ export default function PhotoLabelsPage() {
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` },
           body: JSON.stringify(body),
         });
-        if (!response.ok) throw new Error("Save failed");
+        if (!response.ok) {
+          const result = await response.json().catch(() => ({})) as { error?: string; detail?: string };
+          throw new Error(result.detail || result.error || `Request failed (${response.status})`);
+        }
         if (saveVersions.current[file] === version) setSaveStatus("Saved to the shared menu catalog");
-      } catch {
-        if (saveVersions.current[file] === version) setSaveStatus("Save failed. Check the connection and try again.");
+      } catch (error) {
+        if (saveVersions.current[file] === version) {
+          const detail = error instanceof Error ? error.message : "Connection error";
+          setSaveStatus(`Save failed (${detail}). This label is still on screen; keep this page open.`);
+        }
       }
     }, 350);
   }
