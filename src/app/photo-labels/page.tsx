@@ -9,7 +9,6 @@ const photoFiles = Array.from({ length: 52 }, (_, index) =>
 );
 const sessionKey = "super-chris-photo-label-admin";
 const skipValue = "__skip__";
-const customValue = "__custom__";
 
 type Filter = "all" | "unlabeled" | "labeled" | "skip";
 
@@ -71,21 +70,20 @@ export default function PhotoLabelsPage() {
 
   const reviewedCount = photoFiles.filter((file) => {
     const value = labels[file] || "";
-    return value === skipValue || (value !== "" && value !== customValue);
+    return value === skipValue || value !== "";
   }).length;
 
   const visiblePhotos = useMemo(() => {
     const query = search.trim().toLowerCase();
     return photoFiles.filter((file) => {
       const value = labels[file] || "";
-      const isReviewed = value === skipValue || (value !== "" && value !== customValue);
+      const isReviewed = value === skipValue || value !== "";
       const statusMatches =
         filter === "all" ||
         (filter === "unlabeled" && !isReviewed) ||
         (filter === "labeled" && isReviewed && value !== skipValue) ||
         (filter === "skip" && value === skipValue);
-      const labelText = value === customValue ? "" : value;
-      return statusMatches && (!query || `${file} ${labelText}`.toLowerCase().includes(query));
+      return statusMatches && (!query || `${file} ${value}`.toLowerCase().includes(query));
     });
   }, [filter, labels, search]);
 
@@ -117,7 +115,7 @@ export default function PhotoLabelsPage() {
     saveTimers.current[file] = setTimeout(async () => {
       const body = value === skipValue
         ? { filename: file, skip: true }
-        : { filename: file, label: value === customValue ? "" : value, skip: false };
+        : { filename: file, label: value, skip: false };
       try {
         const response = await fetch("/api/photo-labels", {
           method: "POST",
@@ -143,8 +141,8 @@ export default function PhotoLabelsPage() {
         <div className="container">
           <h1>Label Our Photos</h1>
           <p>
-            Pick the exact menu item shown in each photo. Your labels save to the shared menu
-            and update its product pictures as you go.
+            See each photo beside its label. Click a suggested product name or type the exact name
+            if it is not listed. Labels save automatically to the shared menu.
           </p>
         </div>
       </div>
@@ -203,18 +201,13 @@ export default function PhotoLabelsPage() {
             </label>
           </div>
 
+          <datalist id="photo-label-product-suggestions">
+            {productNames.map((item) => <option key={item.name} value={item.name} />)}
+          </datalist>
           <div className="photo-label-grid">
             {visiblePhotos.map((file) => {
               const current = labels[file] || "";
-              const isKnownItem = productNames.some((item) => item.name === current);
-              const selectedItem = current === skipValue
-                ? skipValue
-                : isKnownItem
-                  ? current
-                  : current
-                    ? customValue
-                    : "";
-              const customText = selectedItem === customValue ? current : "";
+              const isSkipped = current === skipValue;
               return (
                 <article className="photo-label-card" key={file}>
                   <div className="photo-label-image">
@@ -222,47 +215,51 @@ export default function PhotoLabelsPage() {
                       src={`/images/repo/${file}`}
                       alt={`Uploaded bakery photo ${file}`}
                       fill
-                      sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 25vw"
+                      sizes="(max-width: 600px) 42vw, (max-width: 1000px) 24vw, 18vw"
                     />
                   </div>
                   <div className="photo-label-card-body">
                     <h2>{file}</h2>
-                    <label className="photo-label-select">
-                      <span>What is shown in this photo?</span>
-                      <select
-                        value={selectedItem}
+                    <label className="photo-label-entry">
+                      <span>Item shown (click a suggestion or type a label)</span>
+                      <input
+                        type="text"
+                        list="photo-label-product-suggestions"
+                        maxLength={120}
+                        autoComplete="off"
+                        value={isSkipped ? "" : current}
                         disabled={!isUnlocked || !isLoaded}
                         onChange={(event) => updateLabel(file, event.target.value)}
-                      >
-                        <option value="">Choose the exact item</option>
-                        {productNames.map((item) => (
-                          <option key={item.name} value={item.name}>{item.name}</option>
-                        ))}
-                        <option value={customValue}>Other food, enter exact name</option>
-                        <option value={skipValue}>Not a menu item / do not use</option>
-                      </select>
+                        placeholder="Search or enter exact name"
+                      />
                     </label>
-                    {selectedItem === customValue ? (
-                      <label className="photo-label-custom">
-                        <span>Exact food name</span>
-                        <input
-                          type="text"
-                          maxLength={120}
-                          value={customText}
-                          disabled={!isUnlocked}
-                          onChange={(event) => updateLabel(file, event.target.value || customValue)}
-                          placeholder="Type the exact name"
-                        />
-                      </label>
-                    ) : null}
-                    {current && current !== skipValue && current !== customValue ? (
-                      <p className="photo-label-current">
-                        Saved label: <strong>{current}</strong>
-                      </p>
-                    ) : null}
-                    {current === skipValue ? (
-                      <p className="photo-label-current">This photo will not be used for a menu item.</p>
-                    ) : null}
+                    {isSkipped ? (
+                      <p className="photo-label-current">Marked not for the menu.</p>
+                    ) : current ? (
+                      <p className="photo-label-current">Saved label: <strong>{current}</strong></p>
+                    ) : (
+                      <p className="photo-label-current">No label saved yet.</p>
+                    )}
+                    <div className="photo-label-card-actions">
+                      <button
+                        type="button"
+                        className={isSkipped ? "photo-label-action is-selected" : "photo-label-action"}
+                        disabled={!isUnlocked || !isLoaded}
+                        onClick={() => updateLabel(file, isSkipped ? "" : skipValue)}
+                      >
+                        {isSkipped ? "Undo skip" : "Not a menu item"}
+                      </button>
+                      {current && !isSkipped ? (
+                        <button
+                          type="button"
+                          className="photo-label-action"
+                          disabled={!isUnlocked || !isLoaded}
+                          onClick={() => updateLabel(file, "")}
+                        >
+                          Clear label
+                        </button>
+                      ) : null}
+                    </div>
                   </div>
                 </article>
               );
