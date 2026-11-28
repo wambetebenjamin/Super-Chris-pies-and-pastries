@@ -57,6 +57,24 @@ export default function HomePage() {
   const { locale, t } = useLocale();
   const isSw = locale === "sw";
   const [activeHeroSlide, setActiveHeroSlide] = useState(0);
+  const [sharedImageByName, setSharedImageByName] = useState<Record<string, string>>({});
+  const displayedHeroSlides = specials.map((item, index) => sharedImageByName[item.title] || heroSlides[index]);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/photo-labels", { cache: "no-store" })
+      .then((response) => response.ok ? response.json() : null)
+      .then((data: { labels?: Record<string, string> } | null) => {
+        if (!active || !data?.labels) return;
+        const byName: Record<string, string> = {};
+        Object.entries(data.labels).forEach(([filename, label]) => {
+          if (label && label !== "__skip__") byName[label] = `/images/repo/${filename}`;
+        });
+        setSharedImageByName(byName);
+      })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -77,7 +95,7 @@ export default function HomePage() {
         aria-label={isSw ? "SUPER Chris Bakery" : "SUPER Chris Pies and Pastries"}
       >
         <div className="home-hero-slides" aria-hidden="true">
-          {heroSlides.map((image, index) => (
+          {displayedHeroSlides.map((image, index) => (
             <div
               key={image}
               className={`home-hero-slide${index === activeHeroSlide ? " is-active" : ""}`}
@@ -178,7 +196,7 @@ export default function HomePage() {
                         </div>
                       </div>
                       <div className="item-img">
-                        <Image src={item.image} alt={isSw ? item.titleSw : item.title} width={600} height={450} style={{ width: "100%", height: 320, objectFit: "cover" }} />
+                        <Image src={sharedImageByName[item.title] || item.image} alt={isSw ? item.titleSw : item.title} width={600} height={450} style={{ width: "100%", height: 320, objectFit: "cover" }} />
                       </div>
                     </div>
                   ))}

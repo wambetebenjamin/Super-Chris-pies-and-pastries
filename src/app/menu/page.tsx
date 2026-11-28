@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { useLocale } from "@/lib/i18n";
 import { siteConfig, whatsappUrl } from "@/lib/site";
 import { categories, items } from "@/lib/products";
@@ -8,6 +9,27 @@ import { categories, items } from "@/lib/products";
 export default function MenuPage() {
   const { locale } = useLocale();
   const isSw = locale === "sw";
+  const [sharedLabels, setSharedLabels] = useState<Record<string, string>>({});
+  const [hasSharedLabels, setHasSharedLabels] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/photo-labels", { cache: "no-store" })
+      .then((response) => response.ok ? response.json() : null)
+      .then((data: { labels?: Record<string, string> } | null) => {
+        if (!active || !data?.labels) return;
+        setSharedLabels(data.labels);
+        setHasSharedLabels(Object.keys(data.labels).length > 0);
+      })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, []);
+
+  const sharedImageByName = Object.fromEntries(
+    Object.entries(sharedLabels)
+      .filter(([, label]) => label && label !== "__skip__")
+      .map(([filename, label]) => [label, `/images/repo/${filename}`]),
+  );
 
   return (
     <>
@@ -48,11 +70,13 @@ export default function MenuPage() {
               <div key={cat.id} style={{ marginBottom: 50 }}>
                 <h3 className="block-title" style={{ fontSize: 40, marginBottom: 24 }}>{isSw ? cat.sw : cat.en}</h3>
                 <div className="row">
-                  {catItems.map((item) => (
+                  {catItems.map((item) => {
+                    const itemImage = hasSharedLabels ? sharedImageByName[item.name] : item.image;
+                    return (
                     <div key={item.name} className="col-lg-4 col-md-6 col-sm-12 col-xs-12" style={{ marginBottom: 24 }}>
                       <div className="sc-card">
-                        {item.image ? (
-                          <Image src={item.image} alt={item.name} width={800} height={600} style={{ width: "100%", height: 240, objectFit: "cover" }} />
+                        {itemImage ? (
+                          <Image src={itemImage} alt={item.name} width={800} height={600} style={{ width: "100%", height: 240, objectFit: "cover" }} />
                         ) : null}
                         <div className="sc-card-body">
                           <h3>{item.name}</h3>
@@ -70,7 +94,8 @@ export default function MenuPage() {
                         </div>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             );

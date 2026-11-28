@@ -1,80 +1,134 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { productNames } from "@/lib/products";
 
 const photoFiles = Array.from({ length: 52 }, (_, index) =>
   `repo-${String(index + 1).padStart(2, "0")}.jpg`,
 );
-const storageKey = "super-chris-photo-labels-v1";
+const sessionKey = "super-chris-photo-label-admin";
 const skipValue = "__skip__";
 const customValue = "__custom__";
 
 type Filter = "all" | "unlabeled" | "labeled" | "skip";
 
+async function fetchSavedLabels() {
+  const response = await fetch("/api/photo-labels", { cache: "no-store" });
+  if (!response.ok) throw new Error("Could not load shared labels.");
+  const data = (await response.json()) as { labels?: Record<string, string> };
+  return data.labels || {};
+}
+
 export default function PhotoLabelsPage() {
   const [labels, setLabels] = useState<Record<string, string>>({});
   const [filter, setFilter] = useState<Filter>("all");
   const [search, setSearch] = useState("");
-  const [hydrated, setHydrated] = useState(false);
+  const [adminToken, setAdminToken] = useState("");
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [saveStatus, setSaveStatus] = useState("Loading saved labels...");
+  const saveTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+  const saveVersions = useRef<Record<string, number>>({});
 
   useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem(storageKey);
-      if (saved) setLabels(JSON.parse(saved) as Record<string, string>);
-    } catch {
-      window.localStorage.removeItem(storageKey);
+    let active = true;
+    const savedToken = window.sessionStorage.getItem(sessionKey) || "";
+    if (savedToken) {
+      setAdminToken(savedToken);
+      fetch("/api/photo-labels", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${savedToken}` },
+        body: JSON.stringify({ action: "verify" }),
+      }).then((response) => {
+        if (!active) return;
+        if (response.ok) setIsUnlocked(true);
+        else window.sessionStorage.removeItem(sessionKey);
+      }).catch(() => undefined);
     }
-    setHydrated(true);
+    fetchSavedLabels().then((saved) => {
+      if (!active) return;
+      setLabels(saved);
+      setIsLoaded(true);
+      setSaveStatus("Connected to shared labels");
+    }).catch(() => {
+      if (!active) return;
+      setIsLoaded(true);
+      setSaveStatus("Could not connect to shared labels. Refresh to retry.");
+    });
+    return () => { active = false; };
   }, []);
 
-  useEffect(() => {
-    if (hydrated) window.localStorage.setItem(storageKey, JSON.stringify(labels));
-  }, [hydrated, labels]);
+  useEffect(() => () => {
+    Object.values(saveTimers.current).forEach(clearTimeout);
+  }, []);
 
-  const labeledCount = photoFiles.filter((file) => Boolean(labels[file])).length;
+  const reviewedCount = photoFiles.filter((file) => {
+    const value = labels[file] || "";
+    return value === skipValue || (value !== "" && value !== customValue);
+  }).length;
+
   const visiblePhotos = useMemo(() => {
     const query = search.trim().toLowerCase();
     return photoFiles.filter((file) => {
       const value = labels[file] || "";
+      const isReviewed = value === skipValue || (value !== "" && value !== customValue);
       const statusMatches =
         filter === "all" ||
-        (filter === "unlabeled" && !value) ||
-        (filter === "labeled" && Boolean(value) && value !== skipValue) ||
+        (filter === "unlabeled" && !isReviewed) ||
+        (filter === "labeled" && isReviewed && value !== skipValue) ||
         (filter === "skip" && value === skipValue);
-      const labelText = value.startsWith("custom:") ? value.slice(7) : value;
+      const labelText = value === customValue ? "" : value;
       return statusMatches && (!query || `${file} ${labelText}`.toLowerCase().includes(query));
     });
   }, [filter, labels, search]);
 
-  function setLabel(file: string, value: string) {
+  async function unlockEditing(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSaveStatus("Checking access...");
+    try {
+      const response = await fetch("/api/photo-labels", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` },
+        body: JSON.stringify({ action: "verify" }),
+      });
+      if (!response.ok) throw new Error("That access token was not accepted.");
+      window.sessionStorage.setItem(sessionKey, adminToken);
+      setIsUnlocked(true);
+      setSaveStatus("Editing unlocked. Changes save to the live menu.");
+    } catch {
+      setSaveStatus("Access token not accepted. Please check it and try again.");
+    }
+  }
+
+  function saveLabel(file: string, value: string) {
+    if (!isUnlocked) return;
+    const version = (saveVersions.current[file] || 0) + 1;
+    saveVersions.current[file] = version;
+    setSaveStatus("Saving your latest change...");
+    if (saveTimers.current[file]) clearTimeout(saveTimers.current[file]);
+
+    saveTimers.current[file] = setTimeout(async () => {
+      const body = value === skipValue
+        ? { filename: file, skip: true }
+        : { filename: file, label: value === customValue ? "" : value, skip: false };
+      try {
+        const response = await fetch("/api/photo-labels", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` },
+          body: JSON.stringify(body),
+        });
+        if (!response.ok) throw new Error("Save failed");
+        if (saveVersions.current[file] === version) setSaveStatus("Saved to the shared menu catalog");
+      } catch {
+        if (saveVersions.current[file] === version) setSaveStatus("Save failed. Check the connection and try again.");
+      }
+    }, 350);
+  }
+
+  function updateLabel(file: string, value: string) {
     setLabels((current) => ({ ...current, [file]: value }));
-  }
-
-  function exportLabels() {
-    const exportData = photoFiles.map((file) => {
-      const value = labels[file] || "";
-      return {
-        filename: file,
-        label: value.startsWith("custom:") ? value.slice(7) : value || null,
-        status: value === skipValue ? "skip" : value ? "labeled" : "unlabeled",
-      };
-    });
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "super-chris-photo-labels.json";
-    link.click();
-    URL.revokeObjectURL(url);
-  }
-
-  function clearLabels() {
-    if (!window.confirm("Clear all photo labels saved in this browser?")) return;
-    setLabels({});
+    saveLabel(file, value);
   }
 
   return (
@@ -83,8 +137,8 @@ export default function PhotoLabelsPage() {
         <div className="container">
           <h1>Label Our Photos</h1>
           <p>
-            Choose the exact menu item shown in each repository photo. If it does not match
-            any listed product, mark it as not for the menu or enter its exact name.
+            Pick the exact menu item shown in each photo. Your labels save to the shared menu
+            and update its product pictures as you go.
           </p>
         </div>
       </div>
@@ -93,17 +147,26 @@ export default function PhotoLabelsPage() {
         <div className="container">
           <div className="photo-label-toolbar">
             <div>
-              <strong>{labeledCount} of {photoFiles.length} photos reviewed</strong>
-              <p>Selections save in this browser. Export the JSON when finished and share it back here.</p>
+              <strong>{reviewedCount} of {photoFiles.length} photos reviewed</strong>
+              <p aria-live="polite">{isLoaded ? saveStatus : "Loading saved labels..."}</p>
             </div>
-            <div className="photo-label-actions">
-              <button className="btn-primary-sc" type="button" onClick={exportLabels}>
-                Download labels
-              </button>
-              <button className="btn-outline-sc" type="button" onClick={clearLabels}>
-                Clear labels
-              </button>
-            </div>
+            <form className="photo-label-access" onSubmit={unlockEditing}>
+              <label htmlFor="photo-label-token">Owner access token</label>
+              <div>
+                <input
+                  id="photo-label-token"
+                  type="password"
+                  autoComplete="current-password"
+                  value={adminToken}
+                  onChange={(event) => setAdminToken(event.target.value)}
+                  placeholder={isUnlocked ? "Editing unlocked" : "Enter owner token to edit"}
+                  disabled={isUnlocked || !isLoaded}
+                />
+                <button className="btn-primary-sc" type="submit" disabled={isUnlocked || !isLoaded || !adminToken}>
+                  {isUnlocked ? "Unlocked" : "Unlock editing"}
+                </button>
+              </div>
+            </form>
           </div>
 
           <div className="photo-label-controls">
@@ -130,8 +193,15 @@ export default function PhotoLabelsPage() {
           <div className="photo-label-grid">
             {visiblePhotos.map((file) => {
               const current = labels[file] || "";
-              const selectedItem = current.startsWith("custom:") ? customValue : current;
-              const customText = current.startsWith("custom:") ? current.slice(7) : "";
+              const isKnownItem = productNames.some((item) => item.name === current);
+              const selectedItem = current === skipValue
+                ? skipValue
+                : isKnownItem
+                  ? current
+                  : current
+                    ? customValue
+                    : "";
+              const customText = selectedItem === customValue ? current : "";
               return (
                 <article className="photo-label-card" key={file}>
                   <div className="photo-label-image">
@@ -148,10 +218,8 @@ export default function PhotoLabelsPage() {
                       <span>What is shown in this photo?</span>
                       <select
                         value={selectedItem}
-                        onChange={(event) => {
-                          const value = event.target.value;
-                          setLabel(file, value === customValue ? "custom:" : value);
-                        }}
+                        disabled={!isUnlocked || !isLoaded}
+                        onChange={(event) => updateLabel(file, event.target.value)}
                       >
                         <option value="">Choose the exact item</option>
                         {productNames.map((item) => (
@@ -166,15 +234,17 @@ export default function PhotoLabelsPage() {
                         <span>Exact food name</span>
                         <input
                           type="text"
+                          maxLength={120}
                           value={customText}
-                          onChange={(event) => setLabel(file, `custom:${event.target.value}`)}
+                          disabled={!isUnlocked}
+                          onChange={(event) => updateLabel(file, event.target.value || customValue)}
                           placeholder="Type the exact name"
                         />
                       </label>
                     ) : null}
-                    {current && current !== skipValue ? (
+                    {current && current !== skipValue && current !== customValue ? (
                       <p className="photo-label-current">
-                        Label: <strong>{current.startsWith("custom:") ? customText || "Enter a name" : current}</strong>
+                        Saved label: <strong>{current}</strong>
                       </p>
                     ) : null}
                     {current === skipValue ? (
